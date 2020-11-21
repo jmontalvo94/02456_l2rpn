@@ -31,13 +31,16 @@ class ReplayMemory(object):
 class DQN(nn.Module):
     """Deep Q-network with target network"""
     
-    def __init__(self, n_inputs, n_outputs, learning_rate):
+    def __init__(self, n_inputs, n_outputs, NN_PARAMS):
         super(DQN, self).__init__()
         # network
         self.out = nn.Linear(n_inputs, n_outputs)
         
         # training
-        self.optimizer = optim.SGD(self.parameters(), lr=learning_rate)
+        if NN_PARAMS['optimizer']=='SGD':
+            self.optimizer = optim.SGD(self.parameters(), lr=NN_PARAMS['learning_rate'])
+        elif NN_PARAMS['optimizer']=='ADAM':
+            self.optimizer = optim.ADAM(self.parameters(),lr=NN_PARAMS['learning_rate'],weight_decay=NN_PARAMS['weight_decay'])
     
     def forward(self, x):
         return self.out(x)

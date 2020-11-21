@@ -31,10 +31,10 @@ class ReplayMemory(object):
 class DQN(nn.Module):
     """Deep Q-network with target network"""
     
-    def __init__(self, n_inputs, n_outputs, NN_PARAMS):
+    def __init__(self, NN_PARAMS):
         super(DQN, self).__init__()
         # network
-        self.out = nn.Linear(n_inputs, n_outputs)
+        self.out = nn.Linear(NN_PARAMS['n_inputs'], NN_PARAMS['n_outputs'])
         
         # training
         if NN_PARAMS['optimizer']=='SGD':
