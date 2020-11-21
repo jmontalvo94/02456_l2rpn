@@ -36,6 +36,8 @@ class DQN(nn.Module):
         # network
         self.out = nn.Linear(NN_PARAMS['n_inputs'], NN_PARAMS['n_outputs'])
         
+        # hidden layers
+        
         # training
         if NN_PARAMS['optimizer']=='SGD':
             self.optimizer = optim.SGD(self.parameters(), lr=NN_PARAMS['learning_rate'])
