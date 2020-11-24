@@ -34,9 +34,18 @@ class DQN(nn.Module):
     def __init__(self, NN_PARAMS):
         super(DQN, self).__init__()
         # network
-        self.out = nn.Linear(NN_PARAMS['n_inputs'], NN_PARAMS['n_outputs'])
+        if NN_PARAMS['n_hidden_layers']==0:
+            self.out = nn.Linear(NN_PARAMS['n_inputs'], NN_PARAMS['n_outputs'])
+        else:
+            self.out = nn.Linear(NN_PARAMS['n_hidden_units'][-1], NN_PARAMS['n_outputs'])
         
         # hidden layers
+        if NN_PARAMS['n_hidden_layers']>0:
+            self.hd_layers = []
+            input_units = NN_PARAMS['n_inputs']
+            for hidden_units in NN_PARAMS['n_hidden_units']:
+                self.hd_layers.append(nn.Linear(input_units, hidden_units))
+                input_units = hidden_units
         
         # training
         if NN_PARAMS['optimizer']=='SGD':
@@ -45,7 +54,15 @@ class DQN(nn.Module):
             self.optimizer = optim.Adam(self.parameters(),lr=NN_PARAMS['learning_rate'],weight_decay=NN_PARAMS['weight_decay'])
     
     def forward(self, x):
-        return self.out(x)
+        if NN_PARAMS['n_hidden_layers']==0:
+            return self.out(x)
+        else:
+            for f_hid_layer in self.hd_layers:
+                if NN_PARAMS['relu']:
+                    x = F.relu(f_hid_layer(x))
+                else:
+                    x = f_hid_layer(x)
+            return self.out(x)        
     
     def loss(self, q_outputs, q_targets):
         return torch.sum(torch.pow(q_targets - q_outputs, 2))
@@ -56,3 +73,4 @@ class DQN(nn.Module):
             params[k] = (1-tau) * params[k] + tau * new_params[k]
         self.load_state_dict(params)
 
+# %%
