@@ -74,4 +74,21 @@ class DQN(nn.Module):
             params[k] = (1-tau) * params[k] + tau * new_params[k]
         self.load_state_dict(params)
 
+    def print_NN_PARAMS(self):
+        print(self.NN_PARAMS)
+
+
+NN_PARAMS = {
+    'n_inputs':100,
+    'n_outputs':100,
+    'n_hidden_layers':3,
+    'n_hidden_units':[300,300,300],
+    'relu':True,
+    'optimizer':'ADAM',
+    'learning_rate':0.005,
+    'weight_decay':0.001
+}
+policy_dqn = DQN(NN_PARAMS)
+x = torch.from_numpy(np.zeros(NN_PARAMS['n_inputs'])).float()
+policy_dqn(x)
 # %%
