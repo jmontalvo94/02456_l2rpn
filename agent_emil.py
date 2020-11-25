@@ -33,6 +33,7 @@ class DQN(nn.Module):
     
     def __init__(self, NN_PARAMS):
         super(DQN, self).__init__()
+        self.NN_PARAMS = NN_PARAMS
         # network
         if NN_PARAMS['n_hidden_layers']==0:
             self.out = nn.Linear(NN_PARAMS['n_inputs'], NN_PARAMS['n_outputs'])
@@ -54,11 +55,11 @@ class DQN(nn.Module):
             self.optimizer = optim.Adam(self.parameters(),lr=NN_PARAMS['learning_rate'],weight_decay=NN_PARAMS['weight_decay'])
     
     def forward(self, x):
-        if NN_PARAMS['n_hidden_layers']==0:
+        if self.NN_PARAMS['n_hidden_layers']==0:
             return self.out(x)
         else:
             for f_hid_layer in self.hd_layers:
-                if NN_PARAMS['relu']:
+                if self.NN_PARAMS['relu']:
                     x = F.relu(f_hid_layer(x))
                 else:
                     x = f_hid_layer(x)
