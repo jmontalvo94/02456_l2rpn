@@ -34,20 +34,19 @@ class DQN(nn.Module):
     def __init__(self, NN_PARAMS):
         super(DQN, self).__init__()
         self.NN_PARAMS = NN_PARAMS
+        self.hd_layers = nn.ModuleList()
         # network
         if NN_PARAMS['n_hidden_layers']==0:
             self.out = nn.Linear(NN_PARAMS['n_inputs'], NN_PARAMS['n_outputs'])
         else:
             self.out = nn.Linear(NN_PARAMS['n_hidden_units'][-1], NN_PARAMS['n_outputs'])
         
-        # hidden layers
         if NN_PARAMS['n_hidden_layers']>0:
-            self.hd_layers = []
             input_units = NN_PARAMS['n_inputs']
-            for hidden_units in NN_PARAMS['n_hidden_units']:
-                self.hd_layers.append(nn.Linear(input_units, hidden_units))
-                input_units = hidden_units
-        
+            for i in range(NN_PARAMS['n_hidden_layers']):
+                self.hd_layers.append(nn.Linear(input_units, NN_PARAMS['n_hidden_units'][i]))
+                input_units = NN_PARAMS['n_hidden_units'][i]
+                
         # training
         if NN_PARAMS['optimizer']=='SGD':
             self.optimizer = optim.SGD(self.parameters(), lr=NN_PARAMS['learning_rate'])
@@ -57,13 +56,10 @@ class DQN(nn.Module):
     def forward(self, x):
         if self.NN_PARAMS['n_hidden_layers']==0:
             return self.out(x)
-        else:
-            for f_hid_layer in self.hd_layers:
-                if self.NN_PARAMS['relu']:
-                    x = F.relu(f_hid_layer(x))
-                else:
-                    x = f_hid_layer(x)
-            return self.out(x)        
+        else:      
+            for i in range(len(self.hd_layers)):
+                x = F.relu(self.hd_layers[i](x))
+            return self.out(x)           
     
     def loss(self, q_outputs, q_targets):
         return torch.sum(torch.pow(q_targets - q_outputs, 2))
@@ -81,8 +77,8 @@ class DQN(nn.Module):
 # NN_PARAMS = {
 #     'n_inputs':100,
 #     'n_outputs':100,
-#     'n_hidden_layers':3,
-#     'n_hidden_units':[300,300,300],
+#     'n_hidden_layers':2,
+#     'n_hidden_units':[300,300],
 #     'relu':True,
 #     'optimizer':'ADAM',
 #     'learning_rate':0.005,
