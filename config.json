@@ -1,0 +1,22 @@
+{
+    "GENERAL":{
+        "seed": 123,
+        "lightsim": true,
+        "checkpoint": 1,
+        "chunk_size": 100
+    },
+    "TRAINING":{
+        "n_episodes": 10,
+        "chronic_id": 1,
+        "batch_size": 64,
+        "buffer_cap": 10000,
+        "gamma": 0.99,
+        "tau": 0.001
+    },
+    "NN_PARAMS":{
+        "optimizer": "ADAM",
+        "layers": [330,330,330],
+        "learning_rate": 0.001,
+        "weight_decay": 0
+    }
+}

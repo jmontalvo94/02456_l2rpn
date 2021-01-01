@@ -51,7 +51,7 @@ class DQN(nn.Module):
         if NN_PARAMS['optimizer']=='SGD':
             self.optimizer = optim.SGD(self.parameters(), lr=NN_PARAMS['learning_rate'])
         elif NN_PARAMS['optimizer']=='ADAM':
-            self.optimizer = optim.Adam(self.parameters(),lr=NN_PARAMS['learning_rate'],weight_decay=NN_PARAMS['weight_decay'])
+            self.optimizer = optim.Adam(self.parameters(), lr=NN_PARAMS['learning_rate'],weight_decay=NN_PARAMS['weight_decay'])
     
     def forward(self, x):
         if self.NN_PARAMS['n_hidden_layers']==0:
