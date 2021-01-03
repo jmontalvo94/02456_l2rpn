@@ -7,19 +7,19 @@ class FlowLimitAndBlackoutReward(BaseReward):
         BaseReward.__init__(self)
 
     def initialize(self, env):
-        self.reward_min = dt_float(-env.backend.n_line*0.95)
-        self.reward_max = dt_float(env.backend.n_line*0.95)
+        self.reward_min = dt_float(-env.backend.n_line)
+        self.reward_max = dt_float(env.backend.n_line)
         self.reward_none = dt_float(0.0)
 
     def __call__(self, action, env, has_error, is_done, is_illegal, is_ambiguous):
         if not is_done and not has_error:
             relative_flow = self.__get_lines_capacity_usage(env) # (flow/max capacity)
-            limit_diff = dt_float(0.95) - relative_flow
+            limit_diff = dt_float(1.0) - relative_flow
             reward = np.sum((limit_diff**2) * np.sign(limit_diff))
         elif is_done and not has_error:
-            reward = self.reward_max * (24*60 / 5) # completed!
+            reward = self.reward_max # completed!
         elif has_error:
-            reward = self.reward_min * (24*60 / 5) # blackout for a day
+            reward = self.reward_min # blackout or divergence
         else:
             reward = self.reward_none
         return reward

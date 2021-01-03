@@ -2,21 +2,60 @@
     "GENERAL":{
         "seed": 123,
         "lightsim": true,
+        "agent_type": "DDQN",
         "checkpoint": 1,
-        "chunk_size": 100
+        "chunk_size": 288
     },
-    "TRAINING":{
-        "n_episodes": 10,
+    "TRAIN":{
+        "n_episodes": 1,
         "chronic_id": 1,
         "batch_size": 64,
-        "buffer_cap": 10000,
+        "buffer_cap": 100,
         "gamma": 0.99,
-        "tau": 0.001
+        "tau": 0.01
+    },
+    "TEST":{
+        "runner": true,
+        "n_episodes": 1,
+        "n_core": 1,
+        "chronic_id": 1
     },
     "NN_PARAMS":{
         "optimizer": "ADAM",
-        "layers": [330,330,330],
+        "layers": [200,200,200,200,200],
         "learning_rate": 0.001,
         "weight_decay": 0
+    },
+    "OBS_PARAMS":{
+        "year": false,
+        "month": false,
+        "day": false,
+        "hour": false,
+        "minute": false,
+        "day_of_week": false,
+        "prod_p": true,
+        "prod_q": true,
+        "prod_v": true,
+        "load_p": true,
+        "load_q": true,
+        "load_v": true,
+        "p_or": false,
+        "q_or": false,
+        "v_or": false,
+        "a_or": false,
+        "p_ex": false,
+        "q_ex": false,
+        "v_ex": false,
+        "a_ex": false,
+        "rho": true,
+        "line_status": true,
+        "timestep_overflow": true,
+        "topology_vector": true,
+        "line_cooldown": false,
+        "substation_cooldown": false,
+        "maintenance_time": false,
+        "maintenance_duration": false,
+        "target_dispatch": false,
+        "actual_dispatch": false
     }
 }
