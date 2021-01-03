@@ -19,7 +19,7 @@ class DQNAgent(AgentWithConverter):
         self.neural_network.load_state_dict(torch.load(path, map_location=torch.device('cpu')))
 
     def convert_obs(self, observation):
-        transformed_observation = (torch.tensor(observation.to_vect()[self.mask]))/self.max_values
+        transformed_observation = torch.tensor((observation.to_vect()[self.mask])/self.max_values).float()
         return transformed_observation
 
     def my_act(self, transformed_observation, reward, done=False):

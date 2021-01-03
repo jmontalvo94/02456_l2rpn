@@ -21,6 +21,9 @@ from utils import set_seed_everywhere, cli_train, obs_mask, get_max_values
 args, general, params, nn_params, obs_params = cli_train()
 NAME = args.name
 
+PATH_TRAINED = 'trained_models/'
+PATH_STATS = 'statistics/'
+
 # NAME = 'dqn_1'
 
 # general = {
@@ -240,9 +243,9 @@ if AGENT_TYPE == "DQN":
 
         if (i+1) % CHECKPOINT == 0:
             epsilons.append(epsilon); rewards.append(ep_reward); losses.append(ep_loss)
-            torch.save(policy_net.state_dict(), 'trained_models/' + NAME + f'_policy_net_{i+1}.pth')
-            torch.save(target_net.state_dict(), 'trained_models/' + NAME + f'_target_net_{i+1}.pth')
-            np.savez('statistics/' + NAME + f'_stats_{i+1}', epsilons=epsilons, rewards=rewards, lengths=lengths, losses=losses)
+            torch.save(policy_net.state_dict(), PATH_TRAINED + NAME + f'_policy_net_{i+1}.pth')
+            torch.save(target_net.state_dict(), PATH_TRAINED + NAME + f'_target_net_{i+1}.pth')
+            np.savez(PATH_STATS + NAME + f'_stats_{i+1}', epsilons=epsilons, rewards=rewards, lengths=lengths, losses=losses)
 
 elif AGENT_TYPE == "DDQN":
     
@@ -319,6 +322,6 @@ elif AGENT_TYPE == "DDQN":
 
         if (i+1) % CHECKPOINT == 0:
             epsilons.append(epsilon); rewards.append(ep_reward); losses.append(ep_loss)
-            torch.save(policy_net.state_dict(), 'trained_models/' + NAME + f'_policy_net_{i+1}.pth')
-            torch.save(target_net.state_dict(), 'trained_models/' + NAME + f'_target_net_{i+1}.pth')
-            np.savez('statistics/' + NAME + f'_stats_{i+1}', epsilons=epsilons, rewards=rewards, lengths=lengths, losses=losses)
+            torch.save(policy_net.state_dict(), PATH_TRAINED + NAME + f'_policy_net_{i+1}.pth')
+            torch.save(target_net.state_dict(), PATH_TRAINED + NAME + f'_target_net_{i+1}.pth')
+            np.savez(PATH_STATS + NAME + f'_stats_{i+1}', epsilons=epsilons, rewards=rewards, lengths=lengths, losses=losses)

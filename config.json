@@ -7,7 +7,7 @@
         "chunk_size": 288
     },
     "TRAIN":{
-        "n_episodes": 1,
+        "n_episodes": 10,
         "chronic_id": 1,
         "batch_size": 64,
         "buffer_cap": 100,
@@ -16,7 +16,7 @@
     },
     "TEST":{
         "runner": true,
-        "n_episodes": 1,
+        "n_episodes": 10,
         "n_core": 1,
         "chronic_id": 1
     },

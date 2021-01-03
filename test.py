@@ -14,36 +14,73 @@ from grid2op.Runner import Runner
 from lightsim2grid import LightSimBackend
 from networks import DQN
 from rewards import FlowLimitAndBlackoutReward
-from utils import set_seed_everywhere, cli_test
+from utils import set_seed_everywhere, cli_test, obs_mask, get_max_values
 
 
 #%% General parameters
 
-# args, general, params, nn_params = cli_test()
-# NAME = args.name + '_last.pth'
+args, general, params, nn_params, obs_params = cli_test()
+NAME = args.name
 
-NAME = 'policy_net_last.pth'
+# NAME = 'ddqn_500'
+PATH_TRAINED = 'trained_models/'
+PATH_SAVE = 'runner_agents/'
+os.mkdir(PATH_SAVE+NAME)
 
-general = {
-        "seed": 1,
-        "lightsim": True,
-        "checkpoint": 10,
-        "chunk_size": 288, # a day 24*60 / 5
-    }
+# general = {
+#         "seed": 1,
+#         "lightsim": True,
+#         "checkpoint": 10,
+#         "agent_type": "DQN",
+#         "chunk_size": 288, # a day 24*60 / 5
+#     }
 
-test = {
-        "runner": True,
-        "n_episodes": 1,
-        "n_core": 1,
-        "chronic_id": 1
-    }
+# params = {
+#         "runner": True,
+#         "n_episodes": 1,
+#         "n_core": 1,
+#         "chronic_id": 1
+#     }
 
-nn_params = {
-        "optimizer": "ADAM",
-        "layers": [330, 330, 330, 200],
-        "learning_rate": 0.001,
-        "weight_decay": 0
-    }
+# nn_params = {
+#         "optimizer": "ADAM",
+#         "layers": [200, 200, 200, 200, 200],
+#         "learning_rate": 0.001,
+#         "weight_decay": 0
+#     }
+
+# obs_params = {
+#         "year": False,
+#         "month": False,
+#         "day": False,
+#         "hour": False,
+#         "minute": False,
+#         "day_of_week": False,
+#         "prod_p": True,
+#         "prod_q": True,
+#         "prod_v": True,
+#         "load_p": True,
+#         "load_q": True,
+#         "load_v": True,
+#         "p_or": False,
+#         "q_or": False,
+#         "v_or": False,
+#         "a_or": False,
+#         "p_ex": False,
+#         "q_ex": False,
+#         "v_ex": False,
+#         "a_ex": False,
+#         "rho": True,
+#         "line_status": True,
+#         "timestep_overflow": True,
+#         "topology_vector": True,
+#         "line_cooldown": False,
+#         "substation_cooldown": False,
+#         "maintenance_time": False,
+#         "maintenance_duration": False,
+#         "target_dispatch": False,
+#         "actual_dispatch": False
+#     }
 
 SEED = general['seed']
 CHECKPOINT = general['checkpoint']
@@ -78,12 +115,12 @@ env.set_chunk_size(CHUNK_SIZE) # to avoid loading all the episode and fill memor
 #%% Parameters
 
 # Unpack parameters
-RUNNER = test['runner']
-N_EPISODES = test['n_episodes']
-CHRONIC_ID = test['chronic_id']
-N_CORE = test['n_core']
-n_in = 330 # hard-coded observation vector size to remove unused variables
-n_out = 151 # hard-coded action vector size for fixed action space
+RUNNER = params['runner']
+N_EPISODES = params['n_episodes']
+CHRONIC_ID = params['chronic_id']
+N_CORE = params['n_core']
+n_out = 151 # action vector size from converter (includes do nothing action)
+n_in = 164 # observation vector size from mask
 
 # Fix NN layers
 layers = deque(nn_params['layers'])
@@ -92,7 +129,9 @@ layers.append(n_out)
 nn_params['layers'] = layers
 
 # Initialize agent
-agent = DQNAgent(env.action_space, IdToAct, nn_params, path='trained_models/' + NAME, change_bus_vect=False, set_line_status=False, change_line_status=False, redispatch=False)
+mask = obs_mask(env, obs_params)
+max_values = get_max_values(env, mask)
+agent = DQNAgent(env.action_space, mask, max_values, IdToAct, nn_params, path=PATH_TRAINED+NAME+'_policy_net_last.pth', change_bus_vect=False, set_line_status=False, change_line_status=False, redispatch=False)
 agent.seed(SEED) # set seed
 
 #%% Run the model
@@ -100,7 +139,7 @@ agent.seed(SEED) # set seed
 if RUNNER:
 
     runner = Runner(**env.get_params_for_runner(), agentClass=None, agentInstance=agent)
-    runner.run(nb_episode=N_EPISODES, nb_process=N_CORE, path_save=NAME, pbar=True)
+    runner.run(nb_episode=N_EPISODES, nb_process=N_CORE, path_save=PATH_SAVE+NAME, pbar=True)
 
 else:
 
