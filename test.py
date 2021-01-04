@@ -22,11 +22,11 @@ from utils import set_seed_everywhere, cli_test, obs_mask, get_max_values
 args, general, params, nn_params, obs_params = cli_test()
 NAME = args.name
 
-# NAME = 'ddqn_500'
 PATH_TRAINED = 'trained_models/'
 PATH_SAVE = 'runner_agents/'
 os.mkdir(PATH_SAVE+NAME)
 
+# NAME = 'ddqn_500'
 # general = {
 #         "seed": 1,
 #         "lightsim": True,
@@ -197,6 +197,9 @@ else:
 
         print("The total reward was {:.2f}".format(sum(total_reward)))
 
+
+#%%
+    
 # %% Visualization
 
 if N_EPISODES > 1:
