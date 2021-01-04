@@ -119,3 +119,40 @@ def get_max_values(env, mask):
         np.tile(1., env.n_line*14 + env.dim_topo + env.n_sub + env.n_gen*2)
     ])
     return max_all[mask]
+
+def cli_train_ll():
+    """ Command-line interface to run the training procedure.
+
+        Returns:
+            args: arguments from CLI and JSON config file
+    """
+
+    parser = argparse.ArgumentParser(description='Run experiment with configuration from JSON file.')
+
+    parser.add_argument(
+        '-c',
+        '--config_file',
+        type=str,
+        default=None,
+        help='config file',
+        required=True
+    )
+
+    parser.add_argument(
+        '-n',
+        '--name',
+        type=str,
+        default=datetime.now().strftime("%Y-%m-%d_%H:%M:%S"),
+        help='experiment name'
+    )
+
+    args = parser.parse_args()
+
+    # Extract config file data as dictionaries
+    if args.config_file is not None:
+        if '.json' in args.config_file:
+            general = json.load(open(args.config_file))['GENERAL']
+            params = json.load(open(args.config_file))['PARAMS']
+            nn_params = json.load(open(args.config_file))['NN_PARAMS']
+
+    return args, general, params, nn_params

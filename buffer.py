@@ -14,7 +14,7 @@ class ReplayBuffer:
     
     def push(self, *args):
         """Add experience to memory."""
-        self.memory.append(np.array([*args]))
+        self.memory.append([*args])
     
     def sample(self, batch_size):
         """Sample batch of experiences from memory with replacement."""

@@ -1,0 +1,20 @@
+{
+    "GENERAL":{
+        "seed": 123,
+        "agent_type": "DQN",
+        "checkpoint": 1
+    },
+    "PARAMS":{
+        "n_episodes": 10,
+        "batch_size": 64,
+        "buffer_cap": 100,
+        "gamma": 0.99,
+        "tau": 0.01
+    },
+    "NN_PARAMS":{
+        "optimizer": "ADAM",
+        "layers": [200,200,200,200,200],
+        "learning_rate": 0.001,
+        "weight_decay": 0
+    }
+}
