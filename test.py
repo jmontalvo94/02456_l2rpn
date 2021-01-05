@@ -24,8 +24,8 @@ args, general, params, nn_params, obs_params = cli_test()
 NAME = args.name
 
 # NAME = 'ddqn_500'
-# PATH_TRAINED = 'trained_models/'
-# PATH_SAVE = 'runner_agents/'
+PATH_TRAINED = 'trained_models/'
+PATH_SAVE = 'runner_agents/'
 
 # general = {
 #         "seed": 1,
