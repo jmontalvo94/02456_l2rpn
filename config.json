@@ -4,13 +4,13 @@
         "lightsim": true,
         "agent_type": "DDQN",
         "checkpoint": 1,
-        "chunk_size": 288
+        "chunk_size": 576
     },
     "TRAIN":{
         "n_episodes": 10,
         "chronic_id": 1,
-        "batch_size": 64,
-        "buffer_cap": 100,
+        "batch_size": 512,
+        "buffer_cap": 100000,
         "gamma": 0.99,
         "tau": 0.01
     },
